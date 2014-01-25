@@ -1,0 +1,6 @@
+.settings
+*.pyc
+*.pyo
+TouchLatency/bin
+TouchLatency/gen
+
