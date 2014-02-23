@@ -134,30 +134,31 @@ def analyze(data, fps, doPlot=False):
     TIMESTAMP = 0
     X = 1
     Y = 2
-    t = finger_data[:, TIMESTAMP]
+    t = touchscreen_data[:, TIMESTAMP]
      
     x0 = [0.0, 0.0, 0.0] # latency in seconds,  offset_x, offset_y
     def func(x, details=False):
         latency, offset_x, offset_y = x
-        t2 = touchscreen_data[:, TIMESTAMP] - latency
-        touch_x = np.interp(t, t2, touchscreen_data[:, X]) - offset_x
-        touch_y = np.interp(t, t2, touchscreen_data[:, Y]) - offset_y
-        dx = finger_data[:, X] - touch_x
-        dy = finger_data[:, Y] - touch_y
+        t2 = finger_data[:, TIMESTAMP] + latency
+        finger_x = np.interp(t, t2, finger_data[:, X]) - offset_x
+        finger_y = np.interp(t, t2, finger_data[:, Y]) - offset_y
+        dx = touchscreen_data[:, X] - finger_x
+        dy = touchscreen_data[:, Y] - finger_y
         # Discard data that does not overlap
         invalidDataRange = np.logical_or(t < t2[0], t > t2[-1])
         dx[invalidDataRange] = 0.
         dy[invalidDataRange] = 0.
         residuals = np.hstack((dx, dy))
         if details:
-            return {'residuals': residuals, 'touch_x': touch_x, 'touch_y': touch_y}
+            return {'residuals': residuals, 
+                    'finger_x': finger_x, 'finger_y': finger_y}
         return residuals
     rv = scipy.optimize.leastsq(func, x0)
     x = rv[0]
     if doPlot:
         details = func(x, True)
         import matplotlib.pyplot as plt
-        plt.plot(t, finger_data[:, X])
-        plt.plot(t, details['touch_x'])
+        plt.plot(t, details['finger_x'])
+        plt.plot(t, touchscreen_data[:, X])
         plt.show()
     return x[0]
