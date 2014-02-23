@@ -86,7 +86,9 @@ class VideoGui(object):
     def toggle_video_writer(self):
         """Save each frame to a single video file."""
         if self._video_writer is None: # start video recording
-            fourcc = cv2.cv.CV_FOURCC(*'PIM1')
+            fourcc = 'I420' # 'IYUV' #'YUY2'
+            fourcc = cv2.cv.CV_FOURCC(*fourcc)
+            print(fourcc)
             fps = int(np.round(self.processed_frames_per_second))
             filename = time.strftime('%Y%m%d_%H%M%S', time.gmtime()) + '.avi'
             self._video_writer = cv2.VideoWriter(filename, fourcc, fps, self._frame_size)

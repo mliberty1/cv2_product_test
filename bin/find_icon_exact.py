@@ -13,6 +13,13 @@ import cv2
 import sys
 import numpy as np
 
+
+def saveMatchResult(filename, result):
+    result = result * (255.0 / np.max(result)) # scale image to 0.0 to 1.0
+    result = result.astype(np.uint8)
+    cv2.imwrite(filename, result)
+    
+
 if __name__ == '__main__':
     # Parse arguments
     try:
@@ -26,6 +33,7 @@ if __name__ == '__main__':
     
     # Match the icon template against the image
     result = cv2.matchTemplate(image, icon, cv2.TM_SQDIFF_NORMED)
+    #saveMatchResult('match.png', result) 
     idx = np.argmin(result)
     metric = np.ravel(result)[idx]
     if metric > threshold:
