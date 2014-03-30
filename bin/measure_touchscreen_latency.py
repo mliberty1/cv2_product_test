@@ -34,16 +34,21 @@ def get_parser():
                         default=0,
                         type=int,
                         help='The integer video source number.')
+    parser.add_argument('--threshold',
+                        type=int,
+                        help='The binary pixel detection threshold for image preprocessing.')
     return parser
+
 
 class MeasureTouchscreenLatency(object):
     
-    def __init__(self, window_name, features_search_spec, threshold):
+    def __init__(self, window_name, threshold=None):
         """Initialize a new instance.
         
         :param window_name: The cv2.namedWindow name.
         """
         self._window_name = window_name
+        self._threshold = threshold
         self._select = SelectRectangularRegion(self.rectangular_region_callback)
         cv2.setMouseCallback(self._window_name, self._select.onMouse)
         self._rectangle = None
@@ -79,7 +84,7 @@ class MeasureTouchscreenLatency(object):
             return image
         # Extract the region and process
         img = self._rectangle.extract(image)
-        d = cv2_product_test.latency.process(img)
+        d = cv2_product_test.latency.process(img, self._threshold)
         self._data.append(d)
         
         # Draw the identified targets
@@ -115,7 +120,7 @@ if __name__ == '__main__':
     print __doc__
     window_name = 'Measure touchscreen latency'
     gui = VideoGui(args.video_src, window_name)
-    latency = MeasureTouchscreenLatency(window_name, features_search_spec='orb-flann', threshold=215)
+    latency = MeasureTouchscreenLatency(window_name, threshold=args.threshold)
     gui.onDraw = latency.onDraw
     gui.onKeyPress = latency.onKeyPress
     gui.run()

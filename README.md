@@ -22,5 +22,13 @@ under Windows and Mac OS X.  Some features require use of the nonfree library
 which may not be included through the some Linux distribution package managers,
 including Ubuntu.
 
-The project is released under the permissive MIT license.
+For Windows installations, this project is tested using the 
+`WinPython 2.7.6.3 <http://>`_ 
+distribution with the 
+`opencv-python package <http://>`_.  Download both files and execute the 
+WinPython installer.  Once WinPython installs, run 
+"WinPython Control Panel.exe", click "Add packages", select the opencv-python 
+package, and then click "Install Packages".  You will likely also want to
+select "Advanced"->"Register Distribution...".  
 
+The project is released under the permissive MIT license.

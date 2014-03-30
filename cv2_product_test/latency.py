@@ -18,16 +18,19 @@ def _filter_image(img):
     return img
 
 
-def separate_targets(img):
+def separate_targets(img, threshold=None):
     """Separate the targets from the BGR image.
     
     The finger is mostly black and the touchscreen is magneta.
     
-    :return: The tuple of images (finger, touchscreen).
+    :param img: The input BGR image.
+    :param threshold: The (somewhat arbitrary) pixel value threshold used for
+        detection in the range 1 to 255.  Default of None is equivalent to 96.
+    :return: The tuple of binary images (finger, touchscreen).
     """
     
     img = 255 - img # Invert
-    threshold = 96
+    threshold = 96 if threshold is None else threshold
     _, img = cv2.threshold(img, threshold, 255, cv2.THRESH_BINARY)
     # Colors stored as blue, green, red
     # finger is now white and touchscreen is now green
@@ -71,17 +74,18 @@ def touchscreen_image_to_coordinate(img):
     return (int(x), int(y))
 
 
-def process(img):
+def process(img, threshold=None):
     """Process an image into finger and touchscreen coordinates.
     
     :param img: The image to process.
+    :param threshold: The threshold for :func:`separate_targets`.
     :return: ((finger_x, finger_y), (touchscreen_x, touchscreeny)) as integer
         coordinates in the image.  If either finger or touchscreen is not 
         found, then the corresponding point will be None.
     """
     if np.prod(img.shape) == 0:
         return (None, None)
-    finger, touchscreen = separate_targets(img)
+    finger, touchscreen = separate_targets(img, threshold)
     finger = finger_image_to_coordinates(finger)
     touchscreen = touchscreen_image_to_coordinate(touchscreen)
     return (finger, touchscreen)
