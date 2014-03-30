@@ -14,6 +14,7 @@ import cv2
 import os
 import sys
 import time
+import argparse
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,6 +25,16 @@ from cv2_product_test.SelectRectangularRegion import SelectRectangularRegion
 from cv2_product_test.VideoGui import VideoGui, onKeyPress
 import cv2_product_test.latency 
 
+
+def get_parser():
+    parser = argparse.ArgumentParser(description=__doc__,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('video_src',
+                        nargs='?',
+                        default=0,
+                        type=int,
+                        help='The integer video source number.')
+    return parser
 
 class MeasureTouchscreenLatency(object):
     
@@ -100,13 +111,10 @@ class MeasureTouchscreenLatency(object):
 
 
 if __name__ == '__main__':
+    args = get_parser().parse_args()
     print __doc__
-    try: 
-        video_src = sys.argv[1]
-    except: 
-        video_src = 0
     window_name = 'Measure touchscreen latency'
-    gui = VideoGui(video_src, window_name)
+    gui = VideoGui(args.video_src, window_name)
     latency = MeasureTouchscreenLatency(window_name, features_search_spec='orb-flann', threshold=215)
     gui.onDraw = latency.onDraw
     gui.onKeyPress = latency.onKeyPress
