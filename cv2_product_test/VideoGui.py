@@ -66,7 +66,9 @@ class VideoGui(object):
             window_name = 'VideoGui'
         self.window_name = window_name
         cv2.namedWindow(self.window_name)
+        #: Callable called with (self, image) for each image.
         self.onDraw = None
+        #: Callable called with (self, key) for each key pressed.
         self.onKeyPress = onKeyPress
         #: Used to record images to a video file
         self._video_writer = None

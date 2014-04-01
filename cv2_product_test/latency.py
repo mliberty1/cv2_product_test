@@ -94,7 +94,7 @@ def process(img, threshold=None):
 def analyze_dir(path, fps):
     """Process and then analyze a directory of png images.
     
-    :param path: The path to the direcotry of images.
+    :param path: The path to the directory of images.
     :param fps: The frames per second.
     :return: The latency (seconds) between finger and touchscreen.
     """

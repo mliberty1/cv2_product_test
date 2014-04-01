@@ -25,7 +25,7 @@ if __name__ == '__main__':
     try:
         _, icon_filename, image_filename = sys.argv
     except:
-        print __doc__
+        print(__doc__)
         sys.exit(2)
     threshold = 1e-6
     icon = cv2.imread(icon_filename)
